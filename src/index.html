@@ -11,19 +11,17 @@
         }
 
         .highlight {
-            background-color: yellow;
-            color: #2c2c2c;
+            color: whitesmoke;
             padding: 5px;
-            border-radius: 5px;
+            font-weight: normal;
         }
 
         .product_highlight {
-            background-color: yellow;
-
+            border-bottom: solid 4px #00b891;
         }
 
         .service_highlight {
-            background-color: #c66ca9;
+            border-bottom: solid 4px #a800f7;
         }
 
         textarea {
@@ -31,7 +29,7 @@
             min-width: calc(100% - 20px);
             margin: 10px 0;
             background-color: rgb(68, 68, 68);
-            color: white;
+            color: #bebebe;
             padding: 10px;
             border: none;
             border-radius: 10px;
@@ -49,7 +47,7 @@
             padding: 5%;
             background-color: rgb(11 11 11);
             border-radius: 10px;
-            color: white;
+            color: #999999;
             font-size: larger;
             line-height: 2;
         }
@@ -98,13 +96,22 @@
             padding: 12px;
             background-color: #177f46;
             border-radius: 8px;
-            color: whitesmoke;
+            color: #999999;
             animation: statusIndicator cubic-bezier(0.645, 0.045, 0.355, 1) 10s;
-            font-family: monospace;
         }
+
         @keyframes statusIndicator {
             0% {
                 background-color: #2196f3;
+            }
+            100% {
+                background-color: #177f46;
+            }
+        }
+
+        @keyframes productHighlight {
+            0% {
+                background-color: #2195f300;
             }
             100% {
                 background-color: #177f46;
