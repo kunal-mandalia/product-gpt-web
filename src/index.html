@@ -70,27 +70,45 @@
         button:disabled {
             cursor: progress;
             background-color: rgb(46, 46, 46);
+            display: none;
         }
+
         .link {
             background-color: transparent !important;
             border: none !important;
-            font-weight: lighter;
+            font-weight: medium;
+            font-size: smaller;
         }
+
         .link:hover {
             text-decoration: underline;
         }
+
+        #status-indicator {
+            padding: 12px;
+            background-color: #2196f3;
+            border-radius: 10px;
+            color: whitesmoke
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #result {
+            margin: 20px 0
+        }
+
     </style>
 </head>
 
 <body>
     <h1>Product-GPT</h1>
     <input id="query" type="text" placeholder="Type your chat query here" />
-    <button id="go-button" type="button">Go</button>
-    <button id="clear-button" type="button">Clear</button>
-    <button id="random-query-button" class="link">Random question</button>
-    <br />
-    <br />
-    <br />
+    <div id="status-indicator" class="hidden">Identifying products and services...</div>
+    <button id="go-button" type="button" class="">Go</button>
+    <button id="clear-button" type="button" class="">Clear</button>
+    <button id="random-query-button" class="link ">Random question</button>
 
     <div id="result"></div>
     <script type="module" src="./app.js"></script>

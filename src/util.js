@@ -14,8 +14,12 @@ export function getQueryText() {
     return document.getElementById('query').value
 }
 
+export function getStatusIndicator() {
+    return document.getElementById('status-indicator')
+}
+
 function isDev() {
-    // return false
+    return false
     return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
@@ -52,18 +56,22 @@ export function setLoading(isLoading, status) {
     var goBtn = getGoButton()
     var clearBtn = getClearButton()
     var randBtn = getRandomQueryButton()
+    var statusIndicator = getStatusIndicator()
 
     if (isLoading) {
         goBtn.innerText = status
         goBtn.disabled = true
         clearBtn.disabled = true
         randBtn.disabled  = true
+        statusIndicator.classList.remove("hidden")
+        statusIndicator.innerText = status
 
     } else {
         goBtn.innerText = 'Go'
         goBtn.disabled = false
         clearBtn.disabled = false
         randBtn.disabled  = false
+        statusIndicator.classList.add("hidden")
     }
 }
 

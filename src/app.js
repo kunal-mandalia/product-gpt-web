@@ -14,7 +14,7 @@ import {
 
 async function handleGoClick() {
     try {
-        setLoading(true, 'Executing TextCompletion...')
+        setLoading(true, 'Preparing a response with ChatGPT...')
         // get text input
         var q = getQueryText();
         if (!q) {
@@ -40,7 +40,7 @@ async function handleGoClick() {
 
 
         // api call for /entities
-        setLoading(true, 'Extracting Entities...')
+        setLoading(true, 'Identifying related products and services with ChatGPT...')
         var entityEndpoint = baseeUrl + "entities";
         var entityRes = await fetch(entityEndpoint, {
             method: "POST",
@@ -79,7 +79,7 @@ function main() {
     console.log('running app.js')
 
     setQueryValue(getRandomQuery())
-    
+
     var goButton = getGoButton()
     goButton.addEventListener('click', handleGoClick)
 
@@ -88,6 +88,5 @@ function main() {
 
     var randomButton = getRandomQueryButton()
     randomButton.addEventListener('click', handleRandomQueryButtonClick)
-    
 }
 main()
