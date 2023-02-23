@@ -2,12 +2,17 @@ export function getGoButton() {
     return document.getElementById('go-button')
 }
 
+export function getClearButton() {
+    return document.getElementById('clear-button')
+}
+
 export function getQueryText() {
     return document.getElementById('query').value
 }
 
 function isDev() {
-    return window.location.hostname.includes('localhost')
+    return false
+    // return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
     if (isDev()) {
@@ -19,6 +24,11 @@ export function getAPIEndpoint() {
 export function setResultValue(nextVal) {
     var resultArea = document.getElementById('result')
     resultArea.innerHTML = nextVal
+}
+
+export function setQueryValue(val) {
+    var q = document.getElementById('query')
+    q.value = val
 }
 
 
@@ -36,13 +46,16 @@ export function parseEntities(entitiesString) {
 
 export function setLoading(isLoading, status) {
     var goBtn = getGoButton()
+    var clearBtn = getClearButton()
 
     if (isLoading) {
         goBtn.innerText = status
         goBtn.disabled = true
+        clearBtn.disabled = true
     } else {
         goBtn.innerText = 'Go'
         goBtn.disabled = false
+        clearBtn.disabled = false
     }
 }
 

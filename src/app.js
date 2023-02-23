@@ -5,18 +5,23 @@ import {
     setResultValue,
     parseEntities,
     setLoading,
-    highlightEntities
+    highlightEntities,
+    getClearButton,
+    setQueryValue
 } from "./util.js"
 
 async function handleGoClick() {
     try {
         setLoading(true, 'Executing TextCompletion...')
-
         // get text input
         var q = getQueryText();
+        if (!q) {
+            throw new Error('Missing query')
+        }
+
+        setResultValue('')
 
         var baseeUrl = getAPIEndpoint()
-        // alert(endpoint)
         // api call for /textcompletion
         var tcEndpoint = baseeUrl + "textcompletion?q=" + q;
         var tcRes = await fetch(tcEndpoint, {
@@ -56,12 +61,19 @@ async function handleGoClick() {
     } finally {
         setLoading(false)
     }
+}
 
+function handleClearButtonClick() {
+    setQueryValue('')
+    setResultValue('')
 }
 
 function main() {
     console.log('running app.js')
     var goButton = getGoButton()
     goButton.addEventListener('click', handleGoClick)
+
+    var clearButton = getClearButton()
+    clearButton.addEventListener('click', handleClearButtonClick)
 }
 main()
