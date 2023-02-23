@@ -7,7 +7,9 @@ import {
     setLoading,
     highlightEntities,
     getClearButton,
-    setQueryValue
+    setQueryValue,
+    getRandomQuery,
+    getRandomQueryButton
 } from "./util.js"
 
 async function handleGoClick() {
@@ -68,12 +70,24 @@ function handleClearButtonClick() {
     setResultValue('')
 }
 
+function handleRandomQueryButtonClick() {
+    setQueryValue(getRandomQuery())
+}
+
 function main() {
+    
     console.log('running app.js')
+
+    setQueryValue(getRandomQuery())
+    
     var goButton = getGoButton()
     goButton.addEventListener('click', handleGoClick)
 
     var clearButton = getClearButton()
     clearButton.addEventListener('click', handleClearButtonClick)
+
+    var randomButton = getRandomQueryButton()
+    randomButton.addEventListener('click', handleRandomQueryButtonClick)
+    
 }
 main()

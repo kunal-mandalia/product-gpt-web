@@ -21,7 +21,7 @@
             background-color: yellow;
 
         }
-        
+
         .service_highlight {
             background-color: #c66ca9;
         }
@@ -35,6 +35,11 @@
             border: none;
             border-radius: 10px;
             font-size: large;
+        }
+
+        a {
+            margin: 0 5px;
+            cursor: pointer;
         }
 
         #result {
@@ -66,15 +71,23 @@
             cursor: progress;
             background-color: rgb(46, 46, 46);
         }
+        .link {
+            background-color: transparent !important;
+            border: none !important;
+            font-weight: lighter;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
     <h1>Product-GPT</h1>
-    <input id="query" type="text" placeholder="Type your chat query here"
-        value="My house flooded due to a burst pipe. What should I do?" />
+    <input id="query" type="text" placeholder="Type your chat query here" />
     <button id="go-button" type="button">Go</button>
     <button id="clear-button" type="button">Clear</button>
+    <button id="random-query-button" class="link">Random question</button>
     <br />
     <br />
     <br />

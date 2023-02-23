@@ -6,13 +6,17 @@ export function getClearButton() {
     return document.getElementById('clear-button')
 }
 
+export function getRandomQueryButton() {
+    return document.getElementById('random-query-button')
+}
+
 export function getQueryText() {
     return document.getElementById('query').value
 }
 
 function isDev() {
-    return false
-    // return window.location.hostname.includes('localhost')
+    // return false
+    return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
     if (isDev()) {
@@ -47,15 +51,19 @@ export function parseEntities(entitiesString) {
 export function setLoading(isLoading, status) {
     var goBtn = getGoButton()
     var clearBtn = getClearButton()
+    var randBtn = getRandomQueryButton()
 
     if (isLoading) {
         goBtn.innerText = status
         goBtn.disabled = true
         clearBtn.disabled = true
+        randBtn.disabled  = true
+
     } else {
         goBtn.innerText = 'Go'
         goBtn.disabled = false
         clearBtn.disabled = false
+        randBtn.disabled  = false
     }
 }
 
@@ -94,6 +102,25 @@ export function highlightEntities(result, entities) {
         withHighlightsHTML = replaceAt(withHighlightsHTML, index, entity.name, replacement)
     })
     return withHighlightsHTML
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  }
+
+export function getRandomQuery() {
+    var q = getQueryText()
+    var queries = [
+        `My house flooded due to a burst pipe. What should I do?`,
+        `Was Homer real?`,
+        `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`
+    ]
+    var idx = getRandomInt(0, queries.length)
+    var res = queries[idx]
+    if (res === q) return getRandomQuery()
+    return res
 }
 
 // tests
