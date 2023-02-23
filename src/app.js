@@ -59,7 +59,7 @@ async function handleGoClick() {
 
         // todo: api call for /search for further products
     } catch (e) {
-        alert(e)
+        console.error(e)
     } finally {
         setLoading(false)
     }
