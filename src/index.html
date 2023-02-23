@@ -17,11 +17,11 @@
         }
 
         .product_highlight {
-            border-bottom: solid 4px #00b891;
+            border-bottom: solid 4px #009688;
         }
 
         .service_highlight {
-            border-bottom: solid 4px #a800f7;
+            border-bottom: solid 4px #2196f3;
         }
 
         textarea {
@@ -85,36 +85,39 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         #result {
             margin: 20px 0
         }
 
-        #status-indicator {
-            padding: 12px;
-            background-color: #177f46;
-            border-radius: 8px;
-            color: #999999;
-            animation: statusIndicator cubic-bezier(0.645, 0.045, 0.355, 1) 10s;
+
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .status-dot {
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            animation: statusIndicator linear 2s infinite;
+            background-color: #177f46;;
         }
 
         @keyframes statusIndicator {
             0% {
-                background-color: #2196f3;
+                background-color: #177f463b;
             }
-            100% {
+            50% {
                 background-color: #177f46;
             }
-        }
-
-        @keyframes productHighlight {
-            0% {
-                background-color: #2195f300;
-            }
             100% {
-                background-color: #177f46;
+                background-color: #177f463b;
             }
         }
     </style>
@@ -123,7 +126,10 @@
 <body>
     <h1>Product-GPT</h1>
     <textarea id="query" type="text" placeholder="Type your chat query here"></textarea>
-    <div id="status-indicator" class="hidden">Identifying products and services...</div>
+    <div id="status-container" class="status-container hidden">
+        <div class="status-dot"></div>
+        <small id="status-indicator">Identifying products and services...</small>
+    </div>
     <button id="go-button" type="button" class="">Go</button>
     <button id="clear-button" type="button" class="link">Clear</button>
     <button id="random-query-button" class="link ">Random question</button>

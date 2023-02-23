@@ -14,7 +14,7 @@ import {
 
 async function handleGoClick() {
     try {
-        setLoading(true, 'Preparing a response with ChatGPT...')
+        setLoading(true, 'Preparing a chat response')
         // get text input
         var q = getQueryText();
         if (!q) {
@@ -40,7 +40,7 @@ async function handleGoClick() {
 
 
         // api call for /entities
-        setLoading(true, 'Identifying related products and services with ChatGPT...')
+        setLoading(true, 'Identifying related products and services')
         var entityEndpoint = baseeUrl + "entities";
         var entityRes = await fetch(entityEndpoint, {
             method: "POST",

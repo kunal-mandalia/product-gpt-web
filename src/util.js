@@ -17,6 +17,9 @@ export function getQueryText() {
 export function getStatusIndicator() {
     return document.getElementById('status-indicator')
 }
+export function getStatusContainer() {
+    return document.getElementById('status-container')
+}
 
 function isDev() {
     return false
@@ -57,6 +60,7 @@ export function setLoading(isLoading, status) {
     var clearBtn = getClearButton()
     var randBtn = getRandomQueryButton()
     var statusIndicator = getStatusIndicator()
+    var statusContainer = getStatusContainer()
 
     if (isLoading) {
         goBtn.innerText = status
@@ -64,14 +68,14 @@ export function setLoading(isLoading, status) {
         clearBtn.disabled = true
         randBtn.disabled  = true
         statusIndicator.innerText = status
-        statusIndicator.classList.remove("hidden")
+        statusContainer.classList.remove("hidden")
 
     } else {
         goBtn.innerText = 'Go'
         goBtn.disabled = false
         clearBtn.disabled = false
         randBtn.disabled  = false
-        statusIndicator.classList.add("hidden")
+        statusContainer.classList.add("hidden")
     }
 }
 
