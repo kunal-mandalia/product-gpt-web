@@ -63,8 +63,8 @@ export function setLoading(isLoading, status) {
         goBtn.disabled = true
         clearBtn.disabled = true
         randBtn.disabled  = true
-        statusIndicator.classList.remove("hidden")
         statusIndicator.innerText = status
+        statusIndicator.classList.remove("hidden")
 
     } else {
         goBtn.innerText = 'Go'
