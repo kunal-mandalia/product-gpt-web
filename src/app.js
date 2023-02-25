@@ -9,7 +9,8 @@ import {
     getClearButton,
     setQueryValue,
     getRandomQuery,
-    getRandomQueryButton
+    getRandomQueryButton,
+    clearProducts
 } from "./util.js"
 
 function getItemSummary(d) {
@@ -42,6 +43,7 @@ async function handleGoClick() {
         }
 
         setResultValue('')
+        clearProducts()
 
         var baseUrl = getAPIEndpoint()
         // api call for /textcompletion
@@ -79,7 +81,7 @@ async function handleGoClick() {
         setResultValue(ht)
 
 
-        setLoading(true, 'Finding prices for these products...')
+        setLoading(true, 'Finding product prices...')
         // get ebay prod info inc prices for products
         let products = entities.filter(entity => entity[5] === "Product")
         // TODO let api accept array of products
@@ -107,6 +109,7 @@ async function handleGoClick() {
 function handleClearButtonClick() {
     setQueryValue('')
     setResultValue('')
+    clearProducts()
 }
 
 function handleRandomQueryButtonClick() {

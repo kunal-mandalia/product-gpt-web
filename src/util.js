@@ -135,6 +135,11 @@ export function getRandomQuery() {
     return res
 }
 
+export function clearProducts() {
+    var products = document.getElementById("products")
+    products.replaceChildren();
+}
+
 // tests
 function test_highlightEntities() {
     var result = "The best way to get back into shape is to start with a combination of cardio and strength training. Start with a moderate intensity cardio workout such as walking, jogging, or cycling for 30 minutes a day, 3-4 days a week. Then, add in strength training exercises such as push-ups, squats, and lunges to build muscle and increase your overall strength. Make sure to give yourself rest days in between workouts to allow your body to recover. Finally, make sure to eat a balanced diet with plenty of fruits, vegetables, and lean proteins to fuel your body and help you reach your fitness goals."
