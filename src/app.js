@@ -13,7 +13,6 @@ import {
 } from "./util.js"
 
 function getItemSummary(d) {
-    // var p = d.itemSummaries.find(x => !!x.price.value)
     var url = new URL(d.href)
     var q = url.searchParams.get("q")
 
@@ -79,6 +78,8 @@ async function handleGoClick() {
         console.log(ht)
         setResultValue(ht)
 
+
+        setLoading(true, 'Finding prices for these products...')
         // get ebay prod info inc prices for products
         let products = entities.filter(entity => entity[5] === "Product")
         // TODO let api accept array of products
