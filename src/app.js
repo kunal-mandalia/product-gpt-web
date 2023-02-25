@@ -12,9 +12,30 @@ import {
     getRandomQueryButton
 } from "./util.js"
 
+function getItemSummary(d) {
+    // var p = d.itemSummaries.find(x => !!x.price.value)
+    var url = new URL(d.href)
+    var q = url.searchParams.get("q")
+
+    let cur = ""
+    let min = Infinity
+    let max = 0
+    d.itemSummaries.forEach(s => {
+        let n = Number(s.price.value)
+        cur = s.price.currency
+        if (n < min) {
+            min = n
+        }
+        if (n >= max) {
+            max = n
+        }
+    })
+    return `product: ${q}. Price range: ${min} - ${max} ${cur}`
+}
+
 async function handleGoClick() {
     try {
-        setLoading(true, 'Preparing a chat response')
+        setLoading(true, 'Preparing a chat response...')
         // get text input
         var q = getQueryText();
         if (!q) {
@@ -23,9 +44,9 @@ async function handleGoClick() {
 
         setResultValue('')
 
-        var baseeUrl = getAPIEndpoint()
+        var baseUrl = getAPIEndpoint()
         // api call for /textcompletion
-        var tcEndpoint = baseeUrl + "textcompletion?q=" + q;
+        var tcEndpoint = baseUrl + "textcompletion?q=" + q;
         var tcRes = await fetch(tcEndpoint, {
             method: "GET",
         })
@@ -40,8 +61,8 @@ async function handleGoClick() {
 
 
         // api call for /entities
-        setLoading(true, 'Identifying related products and services')
-        var entityEndpoint = baseeUrl + "entities";
+        setLoading(true, 'Identifying related products and services...')
+        var entityEndpoint = baseUrl + "entities";
         var entityRes = await fetch(entityEndpoint, {
             method: "POST",
             body: JSON.stringify({
@@ -51,13 +72,30 @@ async function handleGoClick() {
         var entityValue = await entityRes.json()
         var entities = parseEntities(entityValue.choices[0].text)
         console.table(entities)
+        
 
         // highlight response
         var ht = highlightEntities(tc, entities)
         console.log(ht)
         setResultValue(ht)
 
-        // todo: api call for /search for further products
+        // get ebay prod info inc prices for products
+        let products = entities.filter(entity => entity[5] === "Product")
+        // TODO let api accept array of products
+        for (let i = 0; i < products.length; i++) {
+            var product = products[i]
+            var productRes = await fetch(baseUrl + `ebay_search?q=${product[0]}`)
+            var productText = await productRes.json()
+            console.log(productText)
+            
+            let node = document.getElementById("products")
+            var newNode = document.createElement("div")
+            newNode.classList.add("product");
+            var newContent = document.createTextNode(getItemSummary(productText))
+            newNode.appendChild(newContent)
+            node.append(newNode)
+        }
+
     } catch (e) {
         console.error(e)
     } finally {
