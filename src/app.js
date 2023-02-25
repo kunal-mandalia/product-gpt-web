@@ -30,7 +30,7 @@ function getItemSummary(d) {
             max = n
         }
     })
-    return `product: ${q}. Price range: ${min} - ${max} ${cur}`
+    return `${q}: ${min} - ${max} ${cur}`
 }
 
 async function handleGoClick() {
