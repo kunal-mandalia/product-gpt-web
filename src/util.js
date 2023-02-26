@@ -20,7 +20,6 @@ export function getStatusIndicator() {
 export function getStatusContainer() {
     return document.getElementById('status-container')
 }
-
 function isDev() {
     return false
     return window.location.hostname.includes('localhost')
@@ -140,88 +139,30 @@ export function clearProducts() {
     products.replaceChildren();
 }
 
-// tests
-function test_highlightEntities() {
-    var result = "The best way to get back into shape is to start with a combination of cardio and strength training. Start with a moderate intensity cardio workout such as walking, jogging, or cycling for 30 minutes a day, 3-4 days a week. Then, add in strength training exercises such as push-ups, squats, and lunges to build muscle and increase your overall strength. Make sure to give yourself rest days in between workouts to allow your body to recover. Finally, make sure to eat a balanced diet with plenty of fruits, vegetables, and lean proteins to fuel your body and help you reach your fitness goals."
-    var entities = [
-        [
-            "Cardio",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Strength Training",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Walking",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Jogging",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Cycling",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Push-ups",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Squats",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Lunges",
-            "Exercise",
-            "No"
-        ],
-        [
-            "Rest Days",
-            "Recovery",
-            "No"
-        ],
-        [
-            "Fruits",
-            "Food",
-            "Yes"
-        ],
-        [
-            "Vegetables",
-            "Food",
-            "Yes"
-        ],
-        [
-            "Lean Proteins",
-            "Food",
-            "Yes"
-        ]
-    ]
+export function getItemSummary(d) {
+    var url = new URL(d.href)
+    var q = url.searchParams.get("q")
 
-    var actual = highlightEntities(result, entities)
-    var expected = "The best way to get back into shape is to start with a combination of cardio and strength training. Start with a moderate intensity cardio workout such as walking, jogging, or cycling for 30 minutes a day, 3-4 days a week. Then, add in strength training exercises such as push-ups, squats, and lunges to build muscle and increase your overall strength. Make sure to give yourself rest days in between workouts to allow your body to recover. Finally, make sure to eat a balanced diet with plenty of <strong>Fruits</strong>, <strong>Vegetables</strong>, and <strong>Lean Proteins</strong> to fuel your body and help you reach your fitness goals."
-    if (actual !== expected) {
-        console.error(`test_highlightEntities failed.
-got:
-${actual}
+    let cur = ""
+    let min = Infinity
+    let max = 0
+    d.itemSummaries.forEach(s => {
+        let n = Number(s.price.value)
+        cur = s.price.currency
+        if (n < min) {
+            min = n
+        }
+        if (n >= max) {
+            max = n
+        }
+    })
+    return `${q}: ${min} - ${max} ${cur}`
+}
 
-want:
-${expected}`)
+export function getEbayMarketPlace() {
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (["Europe/London", "Europe/Dublin"].includes(tz)) {
+        return "EBAY_GB"
     }
-}
-
-function runTests() {
-    test_highlightEntities()
-}
-
-if (isDev()) {
-    runTests()
+    return "EBAY_US"
 }

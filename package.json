@@ -1,0 +1,21 @@
+{
+  "name": "product-gpt-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve ./src -p 3333",
+    "test": "node ./src/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunal-mandalia/product-gpt-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kunal-mandalia/product-gpt-web/issues"
+  },
+  "homepage": "https://github.com/kunal-mandalia/product-gpt-web#readme",
+  "type": "module"
+}
