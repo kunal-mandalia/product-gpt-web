@@ -32,12 +32,12 @@ export function getAPIEndpoint() {
 }
 
 export function setResultValue(nextVal) {
-    var resultArea = document.getElementById('result')
+    let resultArea = document.getElementById('result')
     resultArea.innerHTML = nextVal
 }
 
 export function setQueryValue(val) {
-    var q = document.getElementById('query')
+    let q = document.getElementById('query')
     q.value = val
 }
 
@@ -46,9 +46,9 @@ export function parseEntities(entitiesString) {
     // Entity Name | Entity Type | Saleable | Category | Entity Type | Type
     // ' God of War ', ' Video Game ', ' Yes ', ' Entertainment ', ' Product ', ' Product ',
     try {
-        var rows;
+        let rows;
         [, , , , ...rows] = entitiesString.split('\n')
-        var d = rows
+        let d = rows
             .map(r => r.split('|'))
             .map(r => {
                 return {
@@ -67,11 +67,11 @@ export function parseEntities(entitiesString) {
 }
 
 export function setLoading(isLoading, status) {
-    var goBtn = getGoButton()
-    var clearBtn = getClearButton()
-    var randBtn = getRandomQueryButton()
-    var statusIndicator = getStatusIndicator()
-    var statusContainer = getStatusContainer()
+    let goBtn = getGoButton()
+    let clearBtn = getClearButton()
+    let randBtn = getRandomQueryButton()
+    let statusIndicator = getStatusIndicator()
+    let statusContainer = getStatusContainer()
 
     if (isLoading) {
         goBtn.innerText = status
@@ -96,31 +96,31 @@ function replaceAt(str, index, beforeTerm, afterTerm) {
 }
 
 export function highlightEntities(result, entities) {
-    var lcResult = result.toLowerCase()
-    var indices = entities
+    let lcResult = result.toLowerCase()
+    let indices = entities
         .filter((entity) => {
             return ["Product", "Service"].includes(entity.rootType)
         })
         .map(entity => {
-            var name = entity.name
-            var startIndex = lcResult.indexOf(name.toLowerCase())
+            let name = entity.name
+            let startIndex = lcResult.indexOf(name.toLowerCase())
             if (startIndex === -1) return false
-            var endIndex = lcResult.indexOf(name) + name.length
-            var entityType = entity.rootType
+            let endIndex = lcResult.indexOf(name) + name.length
+            let entityType = entity.rootType
             return { name, startIndex, endIndex, entityType }
         }).filter(Boolean)
-    var sortedIndices = indices.sort((a, b) => {
+    let sortedIndices = indices.sort((a, b) => {
         return a.startIndex < b.startIndex
     })
     let withHighlightsHTML = result
-    var productLeftBracket = '<strong class="highlight product_highlight">'
-    var serviceLeftBracket = '<strong class="highlight service_highlight">'
-    var rightBracket = "</strong>"
-    var bracketLength = productLeftBracket.length + rightBracket.length
+    let productLeftBracket = '<strong class="highlight product_highlight">'
+    let serviceLeftBracket = '<strong class="highlight service_highlight">'
+    let rightBracket = "</strong>"
+    let bracketLength = productLeftBracket.length + rightBracket.length
     sortedIndices.forEach((entity, idx) => {
-        var leftBracket = entity.entityType === "Product" ? productLeftBracket : serviceLeftBracket
-        var replacement = `${leftBracket}${entity.name}${rightBracket}`
-        var index = (bracketLength * idx) + entity.startIndex
+        let leftBracket = entity.entityType === "Product" ? productLeftBracket : serviceLeftBracket
+        let replacement = `${leftBracket}${entity.name}${rightBracket}`
+        let index = (bracketLength * idx) + entity.startIndex
         withHighlightsHTML = replaceAt(withHighlightsHTML, index, entity.name, replacement)
     })
     return withHighlightsHTML
@@ -133,21 +133,21 @@ function getRandomInt(min, max) {
   }
 
 export function getRandomQuery() {
-    var q = getQueryText()
-    var queries = [
+    let q = getQueryText()
+    let queries = [
         `Best PS4 games of all time`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
         `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`
     ]
-    var idx = getRandomInt(0, queries.length)
-    var res = queries[idx]
+    let idx = getRandomInt(0, queries.length)
+    let res = queries[idx]
     if (res === q) return getRandomQuery()
     return res
 }
 
 export function clearProducts() {
-    var products = document.getElementById("products")
+    let products = document.getElementById("products")
     products.replaceChildren();
 }
 
@@ -169,7 +169,7 @@ export function getItemSummary(name, data) {
 }
 
 export function getEbayMarketPlace() {
-    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    let tz = Intl.DateTimeFormat().resolvedOptions().timeZone
     if (["Europe/London", "Europe/Dublin"].includes(tz)) {
         return "EBAY_GB"
     }
