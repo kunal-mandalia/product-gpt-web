@@ -10,28 +10,11 @@ import {
     setQueryValue,
     getRandomQuery,
     getRandomQueryButton,
-    clearProducts
+    clearProducts,
+    getItemSummary,
+    getEbayMarketPlace
 } from "./util.js"
 
-function getItemSummary(d) {
-    var url = new URL(d.href)
-    var q = url.searchParams.get("q")
-
-    let cur = ""
-    let min = Infinity
-    let max = 0
-    d.itemSummaries.forEach(s => {
-        let n = Number(s.price.value)
-        cur = s.price.currency
-        if (n < min) {
-            min = n
-        }
-        if (n >= max) {
-            max = n
-        }
-    })
-    return `${q}: ${min} - ${max} ${cur}`
-}
 
 async function handleGoClick() {
     try {
@@ -85,9 +68,10 @@ async function handleGoClick() {
         // get ebay prod info inc prices for products
         let products = entities.filter(entity => entity[5] === "Product")
         // TODO let api accept array of products
+        var mp = getEbayMarketPlace()
         for (let i = 0; i < products.length; i++) {
             var product = products[i]
-            var productRes = await fetch(baseUrl + `ebay_search?q=${product[0]}`)
+            var productRes = await fetch(baseUrl + `ebay_search?q=${product[0]}&marketplace=${mp}`)
             var productText = await productRes.json()
             console.log(productText)
             
