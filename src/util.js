@@ -43,10 +43,22 @@ export function setQueryValue(val) {
 
 
 export function parseEntities(entitiesString) {
+    // Entity Name | Entity Type | Saleable | Category | Entity Type | Type
+    // ' God of War ', ' Video Game ', ' Yes ', ' Entertainment ', ' Product ', ' Product ',
     try {
         var rows;
         [, , , , ...rows] = entitiesString.split('\n')
-        var d = rows.map(r => r.split(' | '))
+        var d = rows
+            .map(r => r.split('|'))
+            .map(r => {
+                return {
+                    name: r[1].trim(),
+                    type: r[2].trim(),
+                    saleable: r[3].trim(),
+                    category: r[4].trim(),
+                    rootType: r[5].trim()
+                }
+            })
         return d
     } catch (e) {
         console.error(e)
@@ -87,15 +99,14 @@ export function highlightEntities(result, entities) {
     var lcResult = result.toLowerCase()
     var indices = entities
         .filter((entity) => {
-            return ["Product", "Service"].includes(entity[5])
-            // return entity[2] === "Yes" || entity[5] === "Business" || entity[5] === "Professional"
+            return ["Product", "Service"].includes(entity.rootType)
         })
         .map(entity => {
-            var name = entity[0]
+            var name = entity.name
             var startIndex = lcResult.indexOf(name.toLowerCase())
             if (startIndex === -1) return false
             var endIndex = lcResult.indexOf(name) + name.length
-            var entityType = entity[5]
+            var entityType = entity.rootType
             return { name, startIndex, endIndex, entityType }
         }).filter(Boolean)
     var sortedIndices = indices.sort((a, b) => {
@@ -124,6 +135,7 @@ function getRandomInt(min, max) {
 export function getRandomQuery() {
     var q = getQueryText()
     var queries = [
+        `Best PS4 games of all time`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
         `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`
@@ -139,14 +151,11 @@ export function clearProducts() {
     products.replaceChildren();
 }
 
-export function getItemSummary(d) {
-    var url = new URL(d.href)
-    var q = url.searchParams.get("q")
-
+export function getItemSummary(name, data) {
     let cur = ""
     let min = Infinity
     let max = 0
-    d.itemSummaries.forEach(s => {
+    data.itemSummaries.forEach(s => {
         let n = Number(s.price.value)
         cur = s.price.currency
         if (n < min) {
@@ -156,7 +165,7 @@ export function getItemSummary(d) {
             max = n
         }
     })
-    return `${q}: ${min} - ${max} ${cur}`
+    return `${name}: ${min} - ${max} ${cur}`
 }
 
 export function getEbayMarketPlace() {

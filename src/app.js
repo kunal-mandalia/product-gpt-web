@@ -66,19 +66,17 @@ async function handleGoClick() {
 
         setLoading(true, 'Finding product prices...')
         // get ebay prod info inc prices for products
-        let products = entities.filter(entity => entity[5] === "Product")
+        let products = entities.filter(entity => entity.rootType === "Product")
         // TODO let api accept array of products
         var mp = getEbayMarketPlace()
         for (let i = 0; i < products.length; i++) {
             var product = products[i]
-            var productRes = await fetch(baseUrl + `ebay_search?q=${product[0]}&marketplace=${mp}`)
-            var productText = await productRes.json()
-            console.log(productText)
-            
+            var productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}`)
+            var results = await productRes.json()
             let node = document.getElementById("products")
             var newNode = document.createElement("div")
             newNode.classList.add("product");
-            var newContent = document.createTextNode(getItemSummary(productText))
+            var newContent = document.createTextNode(getItemSummary(product.name, results))
             newNode.appendChild(newContent)
             node.append(newNode)
         }
