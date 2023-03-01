@@ -11,7 +11,6 @@ import {
     getRandomQuery,
     getRandomQueryButton,
     clearProducts,
-    getItemSummary,
     getEbayMarketPlace
 } from "./util.js"
 
@@ -20,7 +19,7 @@ async function handleGoClick() {
     try {
         setLoading(true, 'Preparing a chat response...')
         // get text input
-        let q = getQueryText();
+        const q = getQueryText();
         if (!q) {
             throw new Error('Missing query')
         }
@@ -28,14 +27,14 @@ async function handleGoClick() {
         setResultValue('')
         clearProducts()
 
-        let baseUrl = getAPIEndpoint()
-        // api call for /textcompletion
-        let tcEndpoint = baseUrl + "textcompletion?q=" + q;
-        let tcRes = await fetch(tcEndpoint, {
+        const baseUrl = getAPIEndpoint()
+        // api call for /textcompconstion
+        const tcEndpoint = baseUrl + "textcompletion?q=" + q;
+        const tcRes = await fetch(tcEndpoint, {
             method: "GET",
         })
-        let tcValue = await tcRes.json()
-        let tc = tcValue.choices[0]
+        const tcValue = await tcRes.json()
+        const tc = tcValue.choices[0]
             .text
             .trimLeft()
             .replaceAll('\n', '<br/>')
@@ -46,38 +45,38 @@ async function handleGoClick() {
 
         // api call for /entities
         setLoading(true, 'Identifying related products and services...')
-        let entityEndpoint = baseUrl + "entities";
-        let entityRes = await fetch(entityEndpoint, {
+        const entityEndpoint = baseUrl + "entities";
+        const entityRes = await fetch(entityEndpoint, {
             method: "POST",
             body: JSON.stringify({
                 query_request: tc,
             })
         })
-        let entityValue = await entityRes.json()
-        let entities = parseEntities(entityValue.choices[0].text)
+        const entityValue = await entityRes.json()
+        const entities = parseEntities(entityValue.choices[0].text)
         console.table(entities)
         
 
         // highlight response
-        let ht = highlightEntities(tc, entities, [])
+        const ht = highlightEntities(tc, entities, [])
         setResultValue(ht)
 
 
         setLoading(true, 'Finding product prices...')
         // get ebay prod info inc prices for products
-        let products = entities.filter(entity => entity.rootType === "Product" || entity.type === "Product")
-        // TODO let api accept array of products
-        let mp = getEbayMarketPlace()
+        const products = entities.filter(entity => entity.rootType === "Product" || entity.type === "Product")
+        // TODO const api accept array of products
+        const mp = getEbayMarketPlace()
 
-        let productsInfo = []
+        const productsInfo = []
         for (let i = 0; i < products.length; i++) {
-            let product = products[i]
-            let productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}&limit=10`)
-            let productInfo = await productRes.json()
+            const product = products[i]
+            const productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}&limit=10`)
+            const productInfo = await productRes.json()
 
             productsInfo.push({ product, info: productInfo })
 
-            let ht = highlightEntities(tc, entities, productsInfo)
+            const ht = highlightEntities(tc, entities, productsInfo)
             setResultValue(ht)
         }
 
@@ -104,13 +103,13 @@ function main() {
 
     setQueryValue(getRandomQuery())
 
-    let goButton = getGoButton()
+    const goButton = getGoButton()
     goButton.addEventListener('click', handleGoClick)
 
-    let clearButton = getClearButton()
+    const clearButton = getClearButton()
     clearButton.addEventListener('click', handleClearButtonClick)
 
-    let randomButton = getRandomQueryButton()
+    const randomButton = getRandomQueryButton()
     randomButton.addEventListener('click', handleRandomQueryButtonClick)
 }
 main()
