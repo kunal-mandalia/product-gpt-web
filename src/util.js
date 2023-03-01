@@ -21,7 +21,7 @@ export function getStatusContainer() {
     return document.getElementById('status-container')
 }
 function isDev() {
-    return false
+    // return false
     return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
@@ -32,27 +32,23 @@ export function getAPIEndpoint() {
 }
 
 export function setResultValue(nextVal) {
-    let resultArea = document.getElementById('result')
+    const resultArea = document.getElementById('result')
     resultArea.innerHTML = nextVal
 }
 
 export function setQueryValue(val) {
-    let q = document.getElementById('query')
+    const q = document.getElementById('query')
     q.value = val
 }
 
 
 export function parseEntities(entitiesString) {
-    // Entity Name | Entity Type | Saleable | Category | Entity Type | Type
-    // ' God of War ', ' Video Game ', ' Yes ', ' Entertainment ', ' Product ', ' Product ',
     try {
         let rows;
         [, , , , ...rows] = entitiesString.split('\n')
-        console.log(rows)
-        let d = rows
+        const d = rows
             .map(r => r.split('|'))
             .map(r => {
-                console.log(r)
                 const offset = r.length === 8 ? 1 : 0
                 return {
                     name: r[offset].trim(),
@@ -70,11 +66,11 @@ export function parseEntities(entitiesString) {
 }
 
 export function setLoading(isLoading, status) {
-    let goBtn = getGoButton()
-    let clearBtn = getClearButton()
-    let randBtn = getRandomQueryButton()
-    let statusIndicator = getStatusIndicator()
-    let statusContainer = getStatusContainer()
+    const goBtn = getGoButton()
+    const clearBtn = getClearButton()
+    const randBtn = getRandomQueryButton()
+    const statusIndicator = getStatusIndicator()
+    const statusContainer = getStatusContainer()
 
     if (isLoading) {
         goBtn.innerText = status
@@ -93,31 +89,57 @@ export function setLoading(isLoading, status) {
     }
 }
 
+export function getCurrencySymbol(cur) {
+    const symbols = {
+        'USD': '$', // US Dollar
+        'EUR': '€', // Euro
+        'CRC': '₡', // Costa Rican Colón
+        'GBP': '£', // British Pound Sterling
+        'ILS': '₪', // Israeli New Sheqel
+        'INR': '₹', // Indian Rupee
+        'JPY': '¥', // Japanese Yen
+        'KRW': '₩', // South Korean Won
+        'NGN': '₦', // Nigerian Naira
+        'PHP': '₱', // Philippine Peso
+        'PLN': 'zł', // Polish Zloty
+        'PYG': '₲', // Paraguayan Guarani
+        'THB': '฿', // Thai Baht
+        'UAH': '₴', // Ukrainian Hryvnia
+        'VND': '₫', // Vietnamese Dong
+    }
+    if (!symbols[cur]) {
+        return ""
+    }
+    return symbols[cur]
+}
+
 export function highlightEntities(result, entities, productsInfo) {
-    let lcResult = result.toLowerCase()
-    let highlights = entities
+    const lcResult = result.toLowerCase()
+    const highlights = entities
         .filter((entity) => {
             return ["Product", "Service"].includes(entity.rootType) || ["Product", "Service"].includes(entity.type)
         })
         .map(entity => {
-            let name = entity.name
-            let startIndex = lcResult.includes(name.toLowerCase())
+            const name = entity.name
+            const startIndex = lcResult.includes(name.toLowerCase())
             if (startIndex === -1) return false
-            let entityType = entity.rootType
+            const entityType = (entity.rootType === "Product" || entity.type === "Product") ? "Product" : "Service"
             let pricing = null
-            let pi = productsInfo.find(x => x.product.name === entity.name)
+            const pi = productsInfo.find(x => x.product.name === entity.name)
             if (pi?.info?.itemSummaries) {
                 pricing = getPriceRange(pi.info)
             }
             return { name, entityType, pricing }
         }).filter(Boolean)
+    console.table(highlights)
 
     let withHighlightsHTML = result
     highlights.forEach(h => {
         const searchMask = h.name;
         const regEx = new RegExp(searchMask, "ig");
-        const pricing = h.pricing ? `<span class="product_price">${h.pricing.min} - ${h.pricing.max}</span>` : ''
-        const replaceMask = `<strong class="highlight product_highlight">${h.name}${pricing}</strong>`
+        const pricing = h.pricing ? `<span class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</span>` : ''
+        const className = h.entityType === "Product" ? "product_highlight" : "service_highlight"
+        const replaceMask = `<strong class="highlight ${className}">${h.name}${pricing}</strong>`
         withHighlightsHTML = withHighlightsHTML.replace(regEx, replaceMask)
     })
     
@@ -131,31 +153,31 @@ function getRandomInt(min, max) {
   }
 
 export function getRandomQuery() {
-    let q = getQueryText()
-    let queries = [
+    const q = getQueryText()
+    const queries = [
         `Best PS4 games of all time`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
         `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`,
         `What should I get my girlfriend for Valentines day?`
     ]
-    let idx = getRandomInt(0, queries.length)
-    let res = queries[idx]
+    const idx = getRandomInt(0, queries.length)
+    const res = queries[idx]
     if (res === q) return getRandomQuery()
     return res
 }
 
 export function clearProducts() {
-    let products = document.getElementById("products")
+    const products = document.getElementById("products")
     products.replaceChildren();
 }
 
 export function getItemSummary(name, data) {
     let cur = ""
-    let min = Infinity
-    let max = 0
+    const min = Infinity
+    const max = 0
     data.itemSummaries.forEach(s => {
-        let n = Number(s.price.value)
+        const n = Number(s.price.value)
         cur = s.price.currency
         if (n < min) {
             min = n
@@ -172,7 +194,7 @@ export function getPriceRange(data) {
     let min = Infinity
     let max = 0
     data.itemSummaries.forEach(s => {
-        let n = Number(s.price.value)
+        const n = Number(s.price.value)
         cur = s.price.currency
         if (n < min) {
             min = n
@@ -181,11 +203,11 @@ export function getPriceRange(data) {
             max = n
         }
     })
-    return { min, max }
+    return { min, max, cur }
 }
 
 export function getEbayMarketPlace() {
-    let tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
     if (["Europe/London", "Europe/Dublin"].includes(tz)) {
         return "EBAY_GB"
     }
