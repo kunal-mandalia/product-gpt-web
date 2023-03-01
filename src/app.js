@@ -60,7 +60,6 @@ async function handleGoClick() {
 
         // highlight response
         let ht = highlightEntities(tc, entities, [])
-        console.log(ht)
         setResultValue(ht)
 
 
@@ -73,14 +72,12 @@ async function handleGoClick() {
         let productsInfo = []
         for (let i = 0; i < products.length; i++) {
             let product = products[i]
-            let productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}`)
+            let productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}&limit=10`)
             let productInfo = await productRes.json()
-            console.log(productInfo)
 
             productsInfo.push({ product, info: productInfo })
 
             let ht = highlightEntities(tc, entities, productsInfo)
-            console.log(ht)
             setResultValue(ht)
         }
 

@@ -21,7 +21,7 @@ export function getStatusContainer() {
     return document.getElementById('status-container')
 }
 function isDev() {
-    return false
+    // return false
     return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
@@ -93,6 +93,30 @@ export function setLoading(isLoading, status) {
     }
 }
 
+export function getCurrencySymbol(cur) {
+    const symbols = {
+        'USD': '$', // US Dollar
+        'EUR': '€', // Euro
+        'CRC': '₡', // Costa Rican Colón
+        'GBP': '£', // British Pound Sterling
+        'ILS': '₪', // Israeli New Sheqel
+        'INR': '₹', // Indian Rupee
+        'JPY': '¥', // Japanese Yen
+        'KRW': '₩', // South Korean Won
+        'NGN': '₦', // Nigerian Naira
+        'PHP': '₱', // Philippine Peso
+        'PLN': 'zł', // Polish Zloty
+        'PYG': '₲', // Paraguayan Guarani
+        'THB': '฿', // Thai Baht
+        'UAH': '₴', // Ukrainian Hryvnia
+        'VND': '₫', // Vietnamese Dong
+    }
+    if (!symbols[cur]) {
+        return ""
+    }
+    return symbols[cur]
+}
+
 export function highlightEntities(result, entities, productsInfo) {
     let lcResult = result.toLowerCase()
     let highlights = entities
@@ -111,12 +135,13 @@ export function highlightEntities(result, entities, productsInfo) {
             }
             return { name, entityType, pricing }
         }).filter(Boolean)
+    console.table(highlights)
 
     let withHighlightsHTML = result
     highlights.forEach(h => {
         const searchMask = h.name;
         const regEx = new RegExp(searchMask, "ig");
-        const pricing = h.pricing ? `<span class="product_price">${h.pricing.min} - ${h.pricing.max}</span>` : ''
+        const pricing = h.pricing ? `<span class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</span>` : ''
         const replaceMask = `<strong class="highlight product_highlight">${h.name}${pricing}</strong>`
         withHighlightsHTML = withHighlightsHTML.replace(regEx, replaceMask)
     })
@@ -181,7 +206,7 @@ export function getPriceRange(data) {
             max = n
         }
     })
-    return { min, max }
+    return { min, max, cur }
 }
 
 export function getEbayMarketPlace() {
