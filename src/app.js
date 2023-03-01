@@ -28,7 +28,6 @@ async function handleGoClick() {
         clearProducts()
 
         const baseUrl = getAPIEndpoint()
-        // api call for /textcompconstion
         const tcEndpoint = baseUrl + "textcompletion?q=" + q;
         const tcRes = await fetch(tcEndpoint, {
             method: "GET",
@@ -65,7 +64,6 @@ async function handleGoClick() {
         setLoading(true, 'Finding product prices...')
         // get ebay prod info inc prices for products
         const products = entities.filter(entity => entity.rootType === "Product" || entity.type === "Product")
-        // TODO const api accept array of products
         const mp = getEbayMarketPlace()
 
         const productsInfo = []
