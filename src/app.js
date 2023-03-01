@@ -20,7 +20,7 @@ async function handleGoClick() {
     try {
         setLoading(true, 'Preparing a chat response...')
         // get text input
-        var q = getQueryText();
+        let q = getQueryText();
         if (!q) {
             throw new Error('Missing query')
         }
@@ -28,14 +28,14 @@ async function handleGoClick() {
         setResultValue('')
         clearProducts()
 
-        var baseUrl = getAPIEndpoint()
+        let baseUrl = getAPIEndpoint()
         // api call for /textcompletion
-        var tcEndpoint = baseUrl + "textcompletion?q=" + q;
-        var tcRes = await fetch(tcEndpoint, {
+        let tcEndpoint = baseUrl + "textcompletion?q=" + q;
+        let tcRes = await fetch(tcEndpoint, {
             method: "GET",
         })
-        var tcValue = await tcRes.json()
-        var tc = tcValue.choices[0]
+        let tcValue = await tcRes.json()
+        let tc = tcValue.choices[0]
             .text
             .trimLeft()
             .replaceAll('\n', '<br/>')
@@ -46,39 +46,37 @@ async function handleGoClick() {
 
         // api call for /entities
         setLoading(true, 'Identifying related products and services...')
-        var entityEndpoint = baseUrl + "entities";
-        var entityRes = await fetch(entityEndpoint, {
+        let entityEndpoint = baseUrl + "entities";
+        let entityRes = await fetch(entityEndpoint, {
             method: "POST",
             body: JSON.stringify({
                 query_request: tc,
             })
         })
-        var entityValue = await entityRes.json()
-        var entities = parseEntities(entityValue.choices[0].text)
+        let entityValue = await entityRes.json()
+        let entities = parseEntities(entityValue.choices[0].text)
         console.table(entities)
         
 
         // highlight response
-        var ht = highlightEntities(tc, entities)
+        let ht = highlightEntities(tc, entities)
         console.log(ht)
         setResultValue(ht)
 
 
         setLoading(true, 'Finding product prices...')
         // get ebay prod info inc prices for products
-        let products = entities.filter(entity => entity[5] === "Product")
+        let products = entities.filter(entity => entity.rootType === "Product")
         // TODO let api accept array of products
-        var mp = getEbayMarketPlace()
+        let mp = getEbayMarketPlace()
         for (let i = 0; i < products.length; i++) {
-            var product = products[i]
-            var productRes = await fetch(baseUrl + `ebay_search?q=${product[0]}&marketplace=${mp}`)
-            var productText = await productRes.json()
-            console.log(productText)
-            
+            let product = products[i]
+            let productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}`)
+            let results = await productRes.json()
             let node = document.getElementById("products")
-            var newNode = document.createElement("div")
+            let newNode = document.createElement("div")
             newNode.classList.add("product");
-            var newContent = document.createTextNode(getItemSummary(productText))
+            let newContent = document.createTextNode(getItemSummary(product.name, results))
             newNode.appendChild(newContent)
             node.append(newNode)
         }
@@ -106,13 +104,13 @@ function main() {
 
     setQueryValue(getRandomQuery())
 
-    var goButton = getGoButton()
+    let goButton = getGoButton()
     goButton.addEventListener('click', handleGoClick)
 
-    var clearButton = getClearButton()
+    let clearButton = getClearButton()
     clearButton.addEventListener('click', handleClearButtonClick)
 
-    var randomButton = getRandomQueryButton()
+    let randomButton = getRandomQueryButton()
     randomButton.addEventListener('click', handleRandomQueryButtonClick)
 }
 main()
