@@ -48,15 +48,18 @@ export function parseEntities(entitiesString) {
     try {
         let rows;
         [, , , , ...rows] = entitiesString.split('\n')
+        console.log(rows)
         let d = rows
             .map(r => r.split('|'))
             .map(r => {
+                console.log(r)
+                const offset = r.length === 8 ? 1 : 0
                 return {
-                    name: r[1].trim(),
-                    type: r[2].trim(),
-                    saleable: r[3].trim(),
-                    category: r[4].trim(),
-                    rootType: r[5].trim()
+                    name: r[offset].trim(),
+                    type: r[offset + 1].trim(),
+                    saleable: r[offset +2].trim(),
+                    category: r[offset + 3].trim(),
+                    rootType: r[offset + 4].trim()
                 }
             })
         return d
@@ -90,39 +93,34 @@ export function setLoading(isLoading, status) {
     }
 }
 
-
-function replaceAt(str, index, beforeTerm, afterTerm) {
-    return str.substring(0, index) + afterTerm + str.substring(index + beforeTerm.length, str.length)
-}
-
-export function highlightEntities(result, entities) {
+export function highlightEntities(result, entities, productsInfo) {
     let lcResult = result.toLowerCase()
-    let indices = entities
+    let highlights = entities
         .filter((entity) => {
-            return ["Product", "Service"].includes(entity.rootType)
+            return ["Product", "Service"].includes(entity.rootType) || ["Product", "Service"].includes(entity.type)
         })
         .map(entity => {
             let name = entity.name
-            let startIndex = lcResult.indexOf(name.toLowerCase())
+            let startIndex = lcResult.includes(name.toLowerCase())
             if (startIndex === -1) return false
-            let endIndex = lcResult.indexOf(name) + name.length
             let entityType = entity.rootType
-            return { name, startIndex, endIndex, entityType }
+            let pricing = null
+            let pi = productsInfo.find(x => x.product.name === entity.name)
+            if (pi?.info?.itemSummaries) {
+                pricing = getPriceRange(pi.info)
+            }
+            return { name, entityType, pricing }
         }).filter(Boolean)
-    let sortedIndices = indices.sort((a, b) => {
-        return a.startIndex < b.startIndex
-    })
+
     let withHighlightsHTML = result
-    let productLeftBracket = '<strong class="highlight product_highlight">'
-    let serviceLeftBracket = '<strong class="highlight service_highlight">'
-    let rightBracket = "</strong>"
-    let bracketLength = productLeftBracket.length + rightBracket.length
-    sortedIndices.forEach((entity, idx) => {
-        let leftBracket = entity.entityType === "Product" ? productLeftBracket : serviceLeftBracket
-        let replacement = `${leftBracket}${entity.name}${rightBracket}`
-        let index = (bracketLength * idx) + entity.startIndex
-        withHighlightsHTML = replaceAt(withHighlightsHTML, index, entity.name, replacement)
+    highlights.forEach(h => {
+        const searchMask = h.name;
+        const regEx = new RegExp(searchMask, "ig");
+        const pricing = h.pricing ? `<span class="product_price">${h.pricing.min} - ${h.pricing.max}</span>` : ''
+        const replaceMask = `<strong class="highlight product_highlight">${h.name}${pricing}</strong>`
+        withHighlightsHTML = withHighlightsHTML.replace(regEx, replaceMask)
     })
+    
     return withHighlightsHTML
 }
 
@@ -138,7 +136,8 @@ export function getRandomQuery() {
         `Best PS4 games of all time`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
-        `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`
+        `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`,
+        `What should I get my girlfriend for Valentines day?`
     ]
     let idx = getRandomInt(0, queries.length)
     let res = queries[idx]
@@ -166,6 +165,23 @@ export function getItemSummary(name, data) {
         }
     })
     return `${name}: ${min} - ${max} ${cur}`
+}
+
+export function getPriceRange(data) {
+    let cur = ""
+    let min = Infinity
+    let max = 0
+    data.itemSummaries.forEach(s => {
+        let n = Number(s.price.value)
+        cur = s.price.currency
+        if (n < min) {
+            min = n
+        }
+        if (n >= max) {
+            max = n
+        }
+    })
+    return { min, max }
 }
 
 export function getEbayMarketPlace() {
