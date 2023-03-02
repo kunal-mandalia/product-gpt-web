@@ -2,7 +2,6 @@ import {
     getGoButton,
     getQueryText,
     getAPIEndpoint,
-    setResultValue,
     parseEntities,
     setLoading,
     highlightEntities,
@@ -10,24 +9,21 @@ import {
     setQueryValue,
     getRandomQuery,
     getRandomQueryButton,
-    clearProducts,
     getEbayMarketPlace,
-    renderProducts,
-    createPriceHandler
+    createPriceHandler,
+    updateApp
 } from "./util.js"
 
 
 async function handleGoClick() {
     try {
-        setLoading(true, 'Preparing a chat response...')
         // get text input
         const q = getQueryText();
         if (!q) {
             throw new Error('Missing query')
         }
 
-        setResultValue('')
-        clearProducts()
+        updateApp("query", "Preparing a chat response...")
 
         const baseUrl = getAPIEndpoint()
         const tcEndpoint = baseUrl + "textcompletion?q=" + q;
@@ -40,8 +36,7 @@ async function handleGoClick() {
             .trimLeft()
             .replaceAll('\n', '<br/>')
 
-        // render response
-        setResultValue(tc)
+        updateApp("chat", tc)
 
 
         // api call for /entities
@@ -60,14 +55,15 @@ async function handleGoClick() {
 
         // highlight response
         const ht = highlightEntities(tc, entities, [])
-        setResultValue(ht)
+        updateApp("chat", ht)
 
 
-        setLoading(true, 'Finding product prices...')
         // get ebay prod info inc prices for products
+        updateApp("loading", "Finding product prices...")
         const products = entities.filter(entity => entity.rootType === "Product" || entity.type === "Product")
         const mp = getEbayMarketPlace()
 
+        updateApp("stop_loading")
         const productsInfo = []
         for (let i = 0; i < products.length; i++) {
             const product = products[i]
@@ -78,8 +74,8 @@ async function handleGoClick() {
             productsInfo.push(wrapped)
 
             const ht = highlightEntities(tc, entities, productsInfo)
-            setResultValue(ht)
-            renderProducts([wrapped])
+            updateApp("chat", ht)
+            updateApp("products", [wrapped])
         }
         productsInfo.forEach(p => {
             createPriceHandler(p.product.name)
@@ -87,14 +83,12 @@ async function handleGoClick() {
     } catch (e) {
         console.error(e)
     } finally {
-        setLoading(false)
+        updateApp("finished")
     }
 }
 
 function handleClearButtonClick() {
-    setQueryValue('')
-    setResultValue('')
-    clearProducts()
+    updateApp("clear")
 }
 
 function handleRandomQueryButtonClick() {

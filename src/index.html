@@ -24,12 +24,11 @@
         }
 
         .product_highlight {
-            border-radius: 8px;
-            border-bottom: solid 2px #21887a;
+            border-bottom: solid 3px #21887a;
         }
 
         .service_highlight {
-            border-bottom: solid 2px #2196f3;
+            border-bottom: solid 3px #2196f3;
         }
 
         textarea {
@@ -58,7 +57,7 @@
         }
 
         button {
-            padding: 10px 20px;
+            padding: 10px 25px;
             background-color: rgb(33, 136, 122);
             color: white;
             border: none;
@@ -120,7 +119,7 @@
             color: #dadada;
             font-size: larger;
             line-height: 2;
-            flex: 1;
+            flex: 10;
             padding: 40px 5%;
             overflow: scroll;
         }
@@ -147,7 +146,7 @@
             border-radius: 10px;
             color: #dadada;
             font-size: medium;
-            flex: 1;
+            flex: 5;
             overflow: scroll;
         }
 
@@ -161,7 +160,7 @@
             background-color: rgb(33, 136, 122);
             color: whitesmoke;
             padding: 4px 8px;
-            border-radius: 20px;
+            border-radius: 0;
             text-decoration: none;
         }
 
@@ -205,6 +204,49 @@
         .buy_link:hover {
             color: white;
             border-color: white;
+        }
+
+        .dog_hidden {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+        .dog_clear {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 60%;
+            opacity: 1;
+        }
+        .dog_loading {
+            position: absolute;
+            bottom: 0%;
+            margin: auto;
+            left: 0;
+            right: 0;
+            height: 20%;
+            opacity: 1;
+            animation: growShrink 2s infinite cubic-bezier(1, 0, 0, 1);
+        }
+        .dog_results {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 16%;
+            opacity: 1;
+        }
+
+        @keyframes growShrink {
+            0% {
+                height: 20%;
+            }
+
+            50% {
+                height: 25%;
+            }
+
+            100% {
+                height: 20%;
+            }
         }
 
         @keyframes statusIndicator {
@@ -263,8 +305,13 @@
     </div>
 
     <div id="result_wrapper">
-        <div id="result"></div>
+        <div id="result">
+        </div>
         <div id="products"></div>
+    </div>
+    <div>
+        <img id="doggo_clear" class="dog_clear" src="./images/doggo_up_left.png"></img>
+        <img id="doggo_loading" class="dog_loading dog_hidden" src="./images/doggo_portrait.png"></img>
     </div>
     <script type="module" src="./app.js"></script>
 </body>
