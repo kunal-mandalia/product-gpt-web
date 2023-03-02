@@ -80,10 +80,10 @@ async function handleGoClick() {
         productsInfo.forEach(p => {
             createPriceHandler(p.product.name)
         })
+        updateApp("finished")
     } catch (e) {
         console.error(e)
-    } finally {
-        updateApp("finished")
+        updateApp("clear")
     }
 }
 

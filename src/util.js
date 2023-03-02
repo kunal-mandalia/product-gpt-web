@@ -250,18 +250,20 @@ export function renderProducts(productsInfo) {
 }
 
 export function createPriceHandler(productName) {
-    const el = document.getElementById(`price_${productName}`)
+    const els = document.querySelectorAll(`#price_${productName}`)
     const target = document.getElementById(productName)
-    if (el && target) {
-        el.removeAttribute('href')
-        el.onclick = () => {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            })
-            target.classList = 'product_details flash_product_details'
-            setTimeout(() => {
-                target.classList = 'product_details'
-            }, 3000);
+    if (els.length > 0 && target) {
+        for (let el of els) {
+            el.removeAttribute('href')
+            el.onclick = () => {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                })
+                target.classList = 'product_details flash_product_details'
+                setTimeout(() => {
+                    target.classList = 'product_details'
+                }, 3000);
+            }
         }
     }
 }
