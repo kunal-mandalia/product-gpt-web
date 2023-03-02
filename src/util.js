@@ -110,7 +110,8 @@ export function getCurrencySymbol(cur) {
 }
 
 function formatId(name) {
-    return name.replaceAll(' ', '_')
+    const b64 = btoa(name)
+    return b64.replaceAll('=', '')
 }
 
 export function highlightEntities(result, entities, productsInfo) {
@@ -155,6 +156,7 @@ function getRandomInt(min, max) {
 export function getRandomQuery() {
     const q = getQueryText()
     const queries = [
+        `What are the best games on the PS5 and why?`,
         `Tell me the top five PS4 games I should play and why`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
