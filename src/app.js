@@ -11,7 +11,9 @@ import {
     getRandomQuery,
     getRandomQueryButton,
     clearProducts,
-    getEbayMarketPlace
+    getEbayMarketPlace,
+    renderProducts,
+    createPriceHandler
 } from "./util.js"
 
 
@@ -72,12 +74,16 @@ async function handleGoClick() {
             const productRes = await fetch(baseUrl + `ebay_search?q=${product.name}(${product.type})&marketplace=${mp}&limit=10`)
             const productInfo = await productRes.json()
 
-            productsInfo.push({ product, info: productInfo })
+            const wrapped = { product, info: productInfo }
+            productsInfo.push(wrapped)
 
             const ht = highlightEntities(tc, entities, productsInfo)
             setResultValue(ht)
+            renderProducts([wrapped])
         }
-
+        productsInfo.forEach(p => {
+            createPriceHandler(p.product.name)
+        })
     } catch (e) {
         console.error(e)
     } finally {
