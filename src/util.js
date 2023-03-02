@@ -133,9 +133,9 @@ export function highlightEntities(result, entities, productsInfo) {
     highlights.forEach(h => {
         const searchMask = h.name;
         const regEx = new RegExp(searchMask, "ig");
-        const pricing = h.pricing ? `<a id="price_${h.name}" href="#${h.name}" class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</a>` : ''
+        const pricing = h.pricing ? `<button type="button" class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</button>` : ''
         const className = h.entityType === "Product" ? "product_highlight" : "service_highlight"
-        const replaceMask = `<span class="highlight ${className}">${h.name}${pricing}</span>`
+        const replaceMask = `<span id="price_${h.name}" class="highlight ${className}">${h.name}${pricing}</span>`
         withHighlightsHTML = withHighlightsHTML.replace(regEx, replaceMask)
     })
     
@@ -151,7 +151,7 @@ function getRandomInt(min, max) {
 export function getRandomQuery() {
     const q = getQueryText()
     const queries = [
-        `Best PS4 games of all time`,
+        `Tell me the top five PS4 games I should play and why`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
         `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`,
