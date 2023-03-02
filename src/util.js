@@ -250,18 +250,79 @@ export function renderProducts(productsInfo) {
 }
 
 export function createPriceHandler(productName) {
-    const el = document.getElementById(`price_${productName}`)
+    const els = document.querySelectorAll(`#price_${productName}`)
     const target = document.getElementById(productName)
-    if (el && target) {
-        el.removeAttribute('href')
-        el.onclick = () => {
-            target.scrollIntoView({
-                behavior: 'smooth'
-            })
-            target.classList = 'product_details flash_product_details'
-            setTimeout(() => {
-                target.classList = 'product_details'
-            }, 3000);
+    if (els.length > 0 && target) {
+        for (let el of els) {
+            el.removeAttribute('href')
+            el.onclick = () => {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                })
+                target.classList = 'product_details flash_product_details'
+                setTimeout(() => {
+                    target.classList = 'product_details'
+                }, 3000);
+            }
         }
+    }
+}
+
+function setDoggoStatus(status) {
+    const doggoClear = document.getElementById('doggo_clear')
+    const doggoLoading = document.getElementById('doggo_loading')
+
+    switch (status) {
+        case "clear":
+            doggoClear.classList.remove("dog_hidden")
+            doggoLoading.classList.add("dog_hidden")
+            break;
+        case "query":
+            doggoClear.classList.add("dog_hidden")
+            doggoLoading.classList.remove("dog_hidden")
+            break;
+        case "loading":
+            doggoClear.classList.add("dog_hidden")
+            doggoLoading.classList.remove("dog_hidden")
+            break;
+        case "stop_loading":
+            doggoClear.classList.add("dog_hidden")
+            doggoLoading.classList.add("dog_hidden")
+            break;
+        case "finished":
+            doggoClear.classList.add("dog_hidden")
+            doggoLoading.classList.add("dog_hidden")
+            break;
+        default:
+            break;
+    }
+}
+
+export function updateApp(status, data) {
+    setDoggoStatus(status)
+    switch (status) {
+        case "clear":
+            setLoading(false, data)
+            setQueryValue('')
+            setResultValue('')
+            clearProducts()
+            break;
+        case "query":
+            setLoading(true, data)
+            setResultValue('')
+            clearProducts()
+            break;
+        case "loading":
+            setLoading(true, data)
+            break;
+        case "chat":
+            setResultValue(data)
+            break;
+        case "products":
+            renderProducts(data)
+        case "finished":
+            setLoading(false)
+        default:
+            break;
     }
 }
