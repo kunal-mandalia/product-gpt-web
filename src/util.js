@@ -167,11 +167,11 @@ export function getRandomQuery() {
         `What are the five most popular Pokemon cards being used in tournaments and why?`,
         `What are the lightest laptops on the market? State their weight too.`,
         `I'm hosting dinner for friends in a week. What can I do to impress them?`,
+        `Recommend ideas on how to decorate my through lounge. I'm somewhat of a minimalist.`,
         `Tell me the top five PS4 games I should play and why`,
         `What are the rarest Magic The Gathering cards and what makes them unique?`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
-        `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`
     ]
     const idx = getRandomInt(0, queries.length)
     const res = queries[idx]
