@@ -22,7 +22,7 @@ function test_highlightEntities() {
     ]
 
     const actual = highlightEntities(result, entities, [])
-    const expected = `The best way to get back into shape is to start with a combination of cardio and strength training. Start with a moderate intensity cardio workout such as walking, jogging, or cycling for 30 minutes a day, 3-4 days a week. Then, add in strength training exercises such as push-ups, squats, and lunges to build muscle and increase your overall strength. Make sure to give yourself rest days in between workouts to allow your body to recover. Finally, make sure to eat a balanced diet with plenty of <strong class="highlight product_highlight">Fruits</strong>, <strong class="highlight product_highlight">Vegetables</strong>, and <strong class="highlight product_highlight">Lean Proteins</strong> to fuel your body and help you reach your fitness goals.`
+    const expected = `The best way to get back into shape is to start with a combination of cardio and strength training. Start with a moderate intensity cardio workout such as walking, jogging, or cycling for 30 minutes a day, 3-4 days a week. Then, add in strength training exercises such as push-ups, squats, and lunges to build muscle and increase your overall strength. Make sure to give yourself rest days in between workouts to allow your body to recover. Finally, make sure to eat a balanced diet with plenty of <span id="price_RnJ1aXRz" class="highlight product_highlight">Fruits</span>, <span id="price_VmVnZXRhYmxlcw" class="highlight product_highlight">Vegetables</span>, and <span id="price_TGVhbiBQcm90ZWlucw" class="highlight product_highlight">Lean Proteins</span> to fuel your body and help you reach your fitness goals.`
     if (actual !== expected) {
         console.error(`test_highlightEntities failed.
 got:
@@ -91,10 +91,37 @@ ${JSON.stringify(expected)}`)
     }
 }
 
+function test_parseEntities_3() {
+    const response = `.
+
+    Entity Name | Entity Type | Saleable | Category | Entity Type | Type
+    ------------|------------|----------|---------|------------|------
+    Pikachu Illustrator (1st Edition) | Trading Card | Yes | Trading Card | Product | Product
+    Charizard (1st Edition Shadowless) | Trading Card | Yes | Trading Card | Product | Product
+    Blastoise (1st Edition) | Trading Card | Yes | Trading Card | Product | Product
+    Venusaur (1st Edition) | Trading Card | Yes | Trading Card | Product | Product
+    Alakazam (1st Edition) | Trading Card | Yes | Trading Card | Product | Product`
+
+    const actual = parseEntities(response)
+    const expected = [{"name":"Pikachu Illustrator (1st Edition)","type":"Trading Card","saleable":"Yes","category":"Trading Card","rootType":"Product"},{"name":"Charizard (1st Edition Shadowless)","type":"Trading Card","saleable":"Yes","category":"Trading Card","rootType":"Product"},{"name":"Blastoise (1st Edition)","type":"Trading Card","saleable":"Yes","category":"Trading Card","rootType":"Product"},{"name":"Venusaur (1st Edition)","type":"Trading Card","saleable":"Yes","category":"Trading Card","rootType":"Product"},{"name":"Alakazam (1st Edition)","type":"Trading Card","saleable":"Yes","category":"Trading Card","rootType":"Product"}]
+
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+        console.error(`test_parseEntities_3 failed.
+got:
+${JSON.stringify(actual)}
+
+want:
+${JSON.stringify(expected)}`)
+    } else {
+        console.info(`test_parseEntities_3 passed`)
+    }
+}
+
 function runTests() {
     test_highlightEntities()
     test_parseEntities()
     test_parseEntities_2()
+    test_parseEntities_3()
 }
 
 runTests()

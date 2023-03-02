@@ -114,6 +114,10 @@ function formatId(name) {
     return b64.replaceAll('=', '')
 }
 
+function escapeRegex(string) {
+    return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 export function highlightEntities(result, entities, productsInfo) {
     const lcResult = result.toLowerCase()
     const highlights = entities
@@ -136,8 +140,9 @@ export function highlightEntities(result, entities, productsInfo) {
 
     let withHighlightsHTML = result
     highlights.forEach(h => {
-        const searchMask = h.name;
-        const regEx = new RegExp(searchMask, "ig");
+        // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
+        const searchMask = escapeRegex(h.name)
+        const regEx = new RegExp(searchMask, "ig")
         const pricing = h.pricing ? `<button type="button" class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</button>` : ''
         const className = h.entityType === "Product" ? "product_highlight" : "service_highlight"
         const replaceMask = `<span id="price_${formatId(h.name)}" class="highlight ${className}">${h.name}${pricing}</span>`
@@ -157,11 +162,16 @@ export function getRandomQuery() {
     const q = getQueryText()
     const queries = [
         `What are the best games on the PS5 and why?`,
+        `What are the most popular soda drinks, their market share, and why people like them`,
+        `Give me ideas for outdoor furniture and why I might like it`,
+        `What are the five most popular Pokemon cards being used in tournaments and why?`,
+        `What are the lightest laptops on the market? State their weight too.`,
+        `I'm hosting dinner for friends in a week. What can I do to impress them?`,
         `Tell me the top five PS4 games I should play and why`,
+        `What are the rarest Magic The Gathering cards and what makes them unique?`,
         `My house flooded due to a burst pipe. What should I do?`,
         `Was Homer real?`,
-        `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`,
-        `What should I get my girlfriend for Valentines day?`
+        `I'm throwing a birthday party for my niece who is 5 years old. How should I prepare?`
     ]
     const idx = getRandomInt(0, queries.length)
     const res = queries[idx]
@@ -250,8 +260,10 @@ export function getProductNode({ product, info }) {
 export function renderProducts(productsInfo) {
     const rootNode = document.getElementById('products')
     productsInfo.forEach(p => {
-        const node = getProductNode(p)
-        rootNode.appendChild(node)
+        if (p.info?.itemSummaries?.length > 0) {
+            const node = getProductNode(p)
+            rootNode.appendChild(node)
+        }
     })
 }
 
