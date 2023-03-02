@@ -109,6 +109,10 @@ export function getCurrencySymbol(cur) {
     return symbols[cur]
 }
 
+function formatId(name) {
+    return name.replaceAll(' ', '_')
+}
+
 export function highlightEntities(result, entities, productsInfo) {
     const lcResult = result.toLowerCase()
     const highlights = entities
@@ -135,7 +139,7 @@ export function highlightEntities(result, entities, productsInfo) {
         const regEx = new RegExp(searchMask, "ig");
         const pricing = h.pricing ? `<button type="button" class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</button>` : ''
         const className = h.entityType === "Product" ? "product_highlight" : "service_highlight"
-        const replaceMask = `<span id="price_${h.name}" class="highlight ${className}">${h.name}${pricing}</span>`
+        const replaceMask = `<span id="price_${formatId(h.name)}" class="highlight ${className}">${h.name}${pricing}</span>`
         withHighlightsHTML = withHighlightsHTML.replace(regEx, replaceMask)
     })
     
@@ -212,7 +216,7 @@ export function getEbayMarketPlace() {
 
 export function getProductNode({ product, info }) {
     const node = document.createElement('div')
-    node.setAttribute('id', product.name )
+    node.setAttribute('id', formatId(product.name))
     node.classList = 'product_details'
     const title = document.createElement('h4')
     title.innerHTML = product.name
@@ -250,8 +254,8 @@ export function renderProducts(productsInfo) {
 }
 
 export function createPriceHandler(productName) {
-    const els = document.querySelectorAll(`#price_${productName}`)
-    const target = document.getElementById(productName)
+    const els = document.querySelectorAll(`#price_${formatId(productName)}`)
+    const target = document.getElementById(formatId(productName))
     if (els.length > 0 && target) {
         for (let el of els) {
             el.removeAttribute('href')
