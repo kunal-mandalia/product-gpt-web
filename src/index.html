@@ -3,25 +3,29 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            padding: 10px;
+            padding: 20px 5% 0;
             background-color: #1f1f1f;
-            color: rgb(80 80 80);
+            color: rgb(199 199 199);
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
         .highlight {
-            color: whitesmoke;
+            /* color: whitesmoke;
             padding: 5px;
-            font-weight: normal;
+            font-weight: normal; */
         }
 
         .product_highlight {
-            border-bottom: solid 4px #009688;
+            /* border-bottom: solid 2px #009688; */
         }
 
         .service_highlight {
-            border-bottom: solid 4px #2196f3;
+            border-bottom: solid 2px #2196f3;
         }
 
         textarea {
@@ -43,29 +47,25 @@
             cursor: pointer;
         }
 
-        #result {
-            min-height: 300px;
-            padding: 5%;
-            background-color: rgb(11 11 11);
-            border-radius: 10px;
-            color: #dadada;
-            font-size: larger;
-            line-height: 2;
+        #actions {
+            height: 50px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
         }
 
         button {
             padding: 10px 20px;
-            background-color: rgb(68, 68, 68);
+            background-color: rgb(33, 136, 122);
             color: white;
             border: none;
             border-radius: 10px;
             font-size: larger;
-            font-weight: bold;
         }
 
         button:hover {
             cursor: pointer;
-            background-color: grey;
+            background-color: rgb(20, 158, 139);
         }
 
         button:disabled {
@@ -89,17 +89,36 @@
             display: none !important;
         }
 
-        #result {
-            margin: 20px 0
+        #result-wrapper {
+            display: flex;
+            gap: 20px;
+            padding: 10px 0;
+            height: 70vh;
+            overflow-y: scroll;
+        }
+        @media only screen and (max-width: 600px) {
+            #result-wrapper {
+                display: block;
+            }
         }
 
+        #result {
+            min-height: 300px;
+            background-color: rgb(11 11 11);
+            border-radius: 10px;
+            color: #dadada;
+            font-size: larger;
+            line-height: 2;
+            flex: 1;
+            padding: 40px 5%;
+        }
 
-        .status-container {
+        .status_container {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 10px;
+            height: 50px;
         }
 
         .status-dot {
@@ -107,34 +126,110 @@
             width: 12px;
             height: 12px;
             animation: statusIndicator linear 2s infinite;
-            background-color: #177f46;;
+            background-color: rgb(33, 136, 122);
+            ;
         }
 
         #products {
-            padding: 20px 5%;
             background-color: rgb(11 11 11);
             border-radius: 10px;
-            color: #999999;
+            color: #dadada;
             font-size: medium;
+            flex: 1;
+            overflow: scroll;
         }
 
         .product {
             padding: 12px
         }
+
         .product_price {
             margin-left: 8px;
             font-size: small;
+            background-color: rgb(33, 136, 122);
+            color: whitesmoke;
+            padding: 4px 8px;
+            border-radius: 20px;
+            text-decoration: none;
+        }
+
+        .product_image {
+            height: 200px;
+            width: auto;
+            animation: fadeIn 2s ease-in;
+            margin: 0 4px;
+            border-radius: 16px;
+        }
+
+        .fade_in {
+            animation: fadeIn 2s ease-in;
+        }
+
+        .img_container {
+            display: flex;
+            height: 200px;
+            overflow: scroll;
+        }
+
+        .product_details {
+            padding: 20px 5%;
+        }
+        .flash_product_details {
+            animation: highlightFlash 1.5s linear;
+        }
+
+        .buy_container {
+            margin-top: 20px;
+        }
+
+        .buy_link {
+            color: #cccccc;
+            border: solid 2px #a9a9a9;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: smaller;
+        }
+        .buy_link:hover {
+            color: white;
+            border-color: white;
         }
 
         @keyframes statusIndicator {
             0% {
                 background-color: #177f463b;
             }
+
             50% {
                 background-color: #177f46;
             }
+
             100% {
                 background-color: #177f463b;
+            }
+        }
+
+        @keyframes highlightFlash {
+            0% {
+                background-color: #177f4600;
+            }
+
+            50% {
+                background-color: #21887a;
+            }
+
+            100% {
+                background-color: #177f4600;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
             }
         }
     </style>
@@ -143,16 +238,20 @@
 <body>
     <h1>Product-GPT</h1>
     <textarea id="query" type="text" placeholder="Type your chat query here then hit Go"></textarea>
-    <div id="status-container" class="status-container hidden">
+    <div id="status_container" class="status_container hidden">
         <div class="status-dot"></div>
-        <small id="status-indicator">Identifying products and services...</small>
+        <small id="status_indicator">Identifying products and services...</small>
     </div>
-    <button id="go-button" type="button" class="">Go</button>
-    <button id="clear-button" type="button" class="link">Clear</button>
-    <button id="random-query-button" class="link ">Random question</button>
+    <div id="actions">
+        <button id="go_button" type="button" class="">GO</button>
+        <button id="clear_button" type="button" class="link">Clear</button>
+        <button id="random_query_button" class="link ">Random question</button>
+    </div>
 
-    <div id="result"></div>
-    <div id="products"></div>
+    <div id="result-wrapper">
+        <div id="result"></div>
+        <div id="products"></div>
+    </div>
     <script type="module" src="./app.js"></script>
 </body>
 

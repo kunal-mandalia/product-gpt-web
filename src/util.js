@@ -1,13 +1,17 @@
 export function getGoButton() {
-    return document.getElementById('go-button')
+    return document.getElementById('go_button')
 }
 
 export function getClearButton() {
-    return document.getElementById('clear-button')
+    return document.getElementById('clear_button')
+}
+
+export function getActions() {
+    return document.getElementById('actions')
 }
 
 export function getRandomQueryButton() {
-    return document.getElementById('random-query-button')
+    return document.getElementById('random_query_button')
 }
 
 export function getQueryText() {
@@ -15,13 +19,13 @@ export function getQueryText() {
 }
 
 export function getStatusIndicator() {
-    return document.getElementById('status-indicator')
+    return document.getElementById('status_indicator')
 }
 export function getStatusContainer() {
-    return document.getElementById('status-container')
+    return document.getElementById('status_container')
 }
 function isDev() {
-    // return false
+    return false
     return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
@@ -66,25 +70,17 @@ export function parseEntities(entitiesString) {
 }
 
 export function setLoading(isLoading, status) {
-    const goBtn = getGoButton()
-    const clearBtn = getClearButton()
-    const randBtn = getRandomQueryButton()
+    const actions = getActions()
     const statusIndicator = getStatusIndicator()
     const statusContainer = getStatusContainer()
 
     if (isLoading) {
-        goBtn.innerText = status
-        goBtn.disabled = true
-        clearBtn.disabled = true
-        randBtn.disabled  = true
+        actions.classList.add("hidden")
         statusIndicator.innerText = status
         statusContainer.classList.remove("hidden")
 
     } else {
-        goBtn.innerText = 'Go'
-        goBtn.disabled = false
-        clearBtn.disabled = false
-        randBtn.disabled  = false
+        actions.classList.remove("hidden")
         statusContainer.classList.add("hidden")
     }
 }
@@ -137,9 +133,9 @@ export function highlightEntities(result, entities, productsInfo) {
     highlights.forEach(h => {
         const searchMask = h.name;
         const regEx = new RegExp(searchMask, "ig");
-        const pricing = h.pricing ? `<span class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</span>` : ''
+        const pricing = h.pricing ? `<a id="price_${h.name}" href="#${h.name}" class="product_price">${getCurrencySymbol(h.pricing.cur)}${h.pricing.min} - ${h.pricing.max}</a>` : ''
         const className = h.entityType === "Product" ? "product_highlight" : "service_highlight"
-        const replaceMask = `<strong class="highlight ${className}">${h.name}${pricing}</strong>`
+        const replaceMask = `<span class="highlight ${className}">${h.name}${pricing}</span>`
         withHighlightsHTML = withHighlightsHTML.replace(regEx, replaceMask)
     })
     
@@ -212,4 +208,60 @@ export function getEbayMarketPlace() {
         return "EBAY_GB"
     }
     return "EBAY_US"
+}
+
+export function getProductNode({ product, info }) {
+    const node = document.createElement('div')
+    node.setAttribute('id', product.name )
+    node.classList = 'product_details'
+    const title = document.createElement('h4')
+    title.innerHTML = product.name
+    node.appendChild(title)
+
+    const imgWrapper = document.createElement('div')
+    imgWrapper.classList = 'img_container'
+    node.appendChild(imgWrapper)
+
+    const buyLink = document.createElement('div')
+    buyLink.classList = 'buy_container'
+    buyLink.innerHTML = `<a class="buy_link fade_in" target="_blank">Buy from eBay</a>`
+
+    info?.itemSummaries?.forEach((s, idx) => {
+        if (s?.thumbnailImages?.length > 0 && idx < 3) {
+            if (idx === 0) {
+                buyLink.innerHTML = `<a class="buy_link fade_in" href="${s.itemWebUrl}" target="_blank">Buy from eBay</a>`
+            }
+            const img = document.createElement('img')
+            img.setAttribute('src', s.thumbnailImages[0].imageUrl)
+            img.classList = 'product_image'
+            imgWrapper.appendChild(img)
+        }
+    })
+    node.appendChild(buyLink)
+    return node
+}
+
+export function renderProducts(productsInfo) {
+    const rootNode = document.getElementById('products')
+    productsInfo.forEach(p => {
+        const node = getProductNode(p)
+        rootNode.appendChild(node)
+    })
+}
+
+export function createPriceHandler(productName) {
+    const el = document.getElementById(`price_${productName}`)
+    const target = document.getElementById(productName)
+    if (el && target) {
+        el.removeAttribute('href')
+        el.onclick = () => {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            })
+            target.classList = 'product_details flash_product_details'
+            setTimeout(() => {
+                target.classList = 'product_details'
+            }, 3000);
+        }
+    }
 }
