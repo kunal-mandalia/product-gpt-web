@@ -112,6 +112,10 @@
             }
         }
 
+        .title {
+            color: #6b6b6b;
+        }
+
         #result {
             min-height: 300px;
             background-color: rgb(11 11 11);
@@ -287,21 +291,24 @@
             }
         }
     </style>
+    <meta>
+    <title>Chaddy</title>
+    </meta>
 </head>
 
 <body>
     <div class="controls">
-        <h1 class="title">Product-GPT</h1>
-        <textarea id="query" type="text" placeholder="Type your chat query here then hit Go"></textarea>
+        <h1 class="title">Chaddy</h1>
+        <textarea id="query" type="text" placeholder="Let's chat. Ask me anything."></textarea>
         <div id="status_container" class="status_container hidden">
             <div class="status_dot"></div>
             <small id="status_indicator">Identifying products and services...</small>
         </div>
     </div>
     <div id="actions">
-        <button id="go_button" type="button" class="">GO</button>
+        <button id="go_button" type="button" class="">Send</button>
         <button id="clear_button" type="button" class="link">Clear</button>
-        <button id="random_query_button" class="link ">Random question</button>
+        <button id="random_query_button" class="link ">Random</button>
     </div>
 
     <div id="result_wrapper">
