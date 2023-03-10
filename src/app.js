@@ -1,3 +1,7 @@
+/**
+ * Written by Kunal Mandalia Limited 2023
+ */
+
 import {
     getGoButton,
     getQueryText,
