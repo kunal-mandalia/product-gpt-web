@@ -24,6 +24,10 @@ export function getStatusIndicator() {
 export function getStatusContainer() {
     return document.getElementById('status_container')
 }
+export function getErrorContainer() {
+    return document.getElementById('error_container')
+}
+
 function isDev() {
     return false
     return window.location.hostname.includes('localhost')
@@ -73,15 +77,23 @@ export function setLoading(isLoading, status) {
     const actions = getActions()
     const statusIndicator = getStatusIndicator()
     const statusContainer = getStatusContainer()
+    const errorContainer = getErrorContainer()
 
     if (isLoading) {
         actions.classList.add("hidden")
         statusIndicator.innerText = status
         statusContainer.classList.remove("hidden")
+        errorContainer.classList.add("hidden")
 
-    } else {
+    } else if (status !== "error") {
         actions.classList.remove("hidden")
         statusContainer.classList.add("hidden")
+        errorContainer.classList.add("hidden")
+    } else {
+        // error
+        actions.classList.remove("hidden")
+        statusContainer.classList.add("hidden")
+        errorContainer.classList.remove("hidden")
     }
 }
 
@@ -311,8 +323,29 @@ function setDoggoStatus(status) {
             doggoClear.classList.add("dog_hidden")
             doggoLoading.classList.add("dog_hidden")
             break;
+        case "error":
+            doggoClear.classList.remove("dog_hidden")
+            doggoLoading.classList.add("dog_hidden")
+            break;
         default:
             break;
+    }
+}
+
+
+
+function trackEvent(message, level) {
+    if (Sentry) {
+        Sentry.captureEvent({
+            message,
+            level
+        })
+    }
+}
+
+function handleError(error) {
+    if (Sentry) {
+        Sentry.captureException(error)
     }
 }
 
@@ -329,6 +362,8 @@ export function updateApp(status, data) {
             setLoading(true, data)
             setResultValue('')
             clearProducts()
+            const q = getQueryText()
+            trackEvent(`query: ${q}`, 'info')
             break;
         case "loading":
             setLoading(true, data)
@@ -340,6 +375,9 @@ export function updateApp(status, data) {
             renderProducts(data)
         case "finished":
             setLoading(false)
+        case "error":
+            setLoading(false, status)
+            handleError(data)
         default:
             break;
     }
