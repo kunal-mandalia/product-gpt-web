@@ -29,7 +29,6 @@ export function getErrorContainer() {
 }
 
 function isDev() {
-    return false
     return window.location.hostname.includes('localhost')
 }
 export function getAPIEndpoint() {
