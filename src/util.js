@@ -335,8 +335,8 @@ function setDoggoStatus(status) {
 
 
 function trackEvent(message, level) {
-    if (Sentry) {
-        Sentry.captureEvent({
+    if (window.Sentry) {
+        window.Sentry.captureEvent({
             message,
             level
         })
@@ -344,8 +344,8 @@ function trackEvent(message, level) {
 }
 
 function handleError(error) {
-    if (Sentry) {
-        Sentry.captureException(error)
+    if (window.Sentry) {
+        window.Sentry.captureException(error)
     }
 }
 

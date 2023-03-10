@@ -341,11 +341,13 @@
     <script type="module" src="./app.js"></script>
     <script src="https://js.sentry-cdn.com/753dff997b1c4a8c99d874a246c001c2.min.js" crossorigin="anonymous"></script>
     <script>
-        Sentry.onLoad(function () {
-            Sentry.init({
-                environment: window.location.hostname.includes('localhost') ? 'dev' : 'prod'
-            })
-        });
+        if (window.Sentry) {
+            window.Sentry.onLoad(function () {
+                window.Sentry.init({
+                    environment: window.location.hostname.includes('localhost') ? 'dev' : 'prod'
+                })
+            });
+        }
     </script>
 </body>
 
