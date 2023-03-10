@@ -249,22 +249,23 @@ export function getProductNode({ product, info }) {
     imgWrapper.classList = 'img_container'
     node.appendChild(imgWrapper)
 
-    const buyLink = document.createElement('div')
-    buyLink.classList = 'buy_container'
-    buyLink.innerHTML = `<a class="buy_link fade_in" target="_blank">Buy from eBay</a>`
-
     info?.itemSummaries?.forEach((s, idx) => {
-        if (s?.thumbnailImages?.length > 0 && idx < 3) {
-            if (idx === 0) {
-                buyLink.innerHTML = `<a class="buy_link fade_in" href="${s.itemWebUrl}" target="_blank">Buy from eBay</a>`
-            }
+        if (s?.thumbnailImages?.length > 0) {
+            const productItemNode = document.createElement('a')
+            productItemNode.setAttribute('href', s.itemWebUrl)
+            productItemNode.setAttribute('target', '_blank')
+            productItemNode.classList.add('product_item')
             const img = document.createElement('img')
             img.setAttribute('src', s.thumbnailImages[0].imageUrl)
             img.classList = 'product_image'
-            imgWrapper.appendChild(img)
+            productItemNode.appendChild(img)
+
+            const priceNode = document.createElement('div')
+            priceNode.innerText = `${getCurrencySymbol(s.price.currency)}${s.price.value}`
+            productItemNode.appendChild(priceNode)
+            imgWrapper.appendChild(productItemNode)
         }
     })
-    node.appendChild(buyLink)
     return node
 }
 
