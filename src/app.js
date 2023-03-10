@@ -20,10 +20,10 @@ async function handleGoClick() {
         // get text input
         const q = getQueryText();
         if (!q) {
-            throw new Error('Missing query')
+            return
         }
 
-        updateApp("query", "Preparing a chat response...")
+        updateApp("query", "Asking OpenAI...")
 
         const baseUrl = getAPIEndpoint()
         const tcEndpoint = baseUrl + "textcompletion?q=" + q;
@@ -83,7 +83,7 @@ async function handleGoClick() {
         updateApp("finished")
     } catch (e) {
         console.error(e)
-        updateApp("clear")
+        updateApp("error", e)
     }
 }
 

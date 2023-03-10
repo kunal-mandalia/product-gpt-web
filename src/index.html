@@ -99,14 +99,17 @@
             height: calc(100vh - 300px);
             overflow: hidden;
         }
+
         @media only screen and (max-width: 600px) {
             #result_wrapper {
                 display: block;
                 overflow: scroll;
             }
+
             .controls {
                 padding: 20px 20px 0;
             }
+
             .title {
                 font-size: larger;
             }
@@ -143,6 +146,13 @@
             animation: statusIndicator linear 2s infinite;
             background-color: rgb(33, 136, 122);
             ;
+        }
+        .error_container {
+            border: solid 1px red;
+            background-color: rgb(126, 13, 13);
+            color: whitesmoke;
+            border-radius: 10px;
+            margin: 5px 0px;
         }
 
         #products {
@@ -189,6 +199,7 @@
         .product_details {
             padding: 20px 5%;
         }
+
         .flash_product_details {
             animation: highlightFlash 1.5s linear;
         }
@@ -205,6 +216,7 @@
             border-radius: 8px;
             font-size: smaller;
         }
+
         .buy_link:hover {
             color: white;
             border-color: white;
@@ -214,6 +226,7 @@
             opacity: 0 !important;
             pointer-events: none;
         }
+
         .dog_clear {
             position: absolute;
             bottom: 0;
@@ -221,6 +234,7 @@
             height: 60%;
             opacity: 1;
         }
+
         .dog_loading {
             position: absolute;
             bottom: 0%;
@@ -231,6 +245,7 @@
             opacity: 1;
             animation: growShrink 2s infinite cubic-bezier(1, 0, 0, 1);
         }
+
         .dog_results {
             position: absolute;
             bottom: 0;
@@ -304,6 +319,9 @@
             <div class="status_dot"></div>
             <small id="status_indicator">Identifying products and services...</small>
         </div>
+        <div id="error_container" class="error_container hidden">
+            <p>Something went wrong. We've noted the issue. Try again.</p>
+        </div>
     </div>
     <div id="actions">
         <button id="go_button" type="button" class="">Golden Search</button>
@@ -321,6 +339,14 @@
         <img id="doggo_loading" class="dog_loading dog_hidden" src="./images/doggo_portrait.png"></img>
     </div>
     <script type="module" src="./app.js"></script>
+    <script src="https://js.sentry-cdn.com/753dff997b1c4a8c99d874a246c001c2.min.js" crossorigin="anonymous"></script>
+    <script>
+        Sentry.onLoad(function () {
+            Sentry.init({
+                environment: window.location.hostname.includes('localhost') ? 'dev' : 'prod'
+            })
+        });
+    </script>
 </body>
 
 </html>
