@@ -252,7 +252,8 @@ export function getProductNode({ product, info }) {
     info?.itemSummaries?.forEach((s, idx) => {
         if (s?.thumbnailImages?.length > 0) {
             const productItemNode = document.createElement('a')
-            productItemNode.setAttribute('href', s.itemWebUrl)
+            const itemUrl = s.itemAffiliateWebUrl || s.itemWebUrl
+            productItemNode.setAttribute('href', itemUrl)
             productItemNode.setAttribute('target', '_blank')
             productItemNode.classList.add('product_item')
             const img = document.createElement('img')
