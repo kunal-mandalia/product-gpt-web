@@ -23,13 +23,15 @@ async function handleGoClick() {
     try {
         const q = getQueryText();
         if (!q) {
-            return
+            return null
         }
 
         updateApp("query", "Asking OpenAI...")
 
         const baseUrl = getAPIEndpoint()
-        const tcEndpoint = baseUrl + "textcompletion?q=" + q;
+        const r = Math.random()
+        
+        const tcEndpoint = r > 0.5 ? baseUrl + "textcompletion?q=" + q : "notfound"
         const tcRes = await fetch(tcEndpoint, {
             method: "GET",
         })
@@ -53,8 +55,6 @@ async function handleGoClick() {
         })
         const entityValue = await entityRes.json()
         const entities = parseEntities(entityValue.choices[0].text)
-        console.table(entities)
-        
 
         // highlight response
         const ht = highlightEntities(tc, entities, [])
@@ -84,9 +84,11 @@ async function handleGoClick() {
             createPriceHandler(p.product.name)
         })
         updateApp("finished")
+        return null
     } catch (e) {
         console.error(e)
         updateApp("error", e)
+        return e
     }
 }
 
@@ -98,11 +100,20 @@ function handleRandomQueryButtonClick() {
     setQueryValue(getRandomQuery())
 }
 
+function withRetry(func) {
+    return async () => {
+        const error = await func()
+        if (error) {
+            await func()
+        }
+    }
+}
+
 function main() {
     console.log('running app.js')
 
     const goButton = getGoButton()
-    goButton.addEventListener('click', handleGoClick)
+    goButton.addEventListener('click', withRetry(handleGoClick))
 
     const clearButton = getClearButton()
     clearButton.addEventListener('click', handleClearButtonClick)

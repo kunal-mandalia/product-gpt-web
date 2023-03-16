@@ -147,7 +147,6 @@ export function highlightEntities(result, entities, productsInfo) {
             }
             return { name, entityType, pricing }
         }).filter(Boolean)
-    console.table(highlights)
 
     let withHighlightsHTML = result
     highlights.forEach(h => {
