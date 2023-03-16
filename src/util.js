@@ -172,17 +172,13 @@ function getRandomInt(min, max) {
 export function getRandomQuery() {
     const q = getQueryText()
     const queries = [
-        `What are the best games on the PS5 and why?`,
         `What are the most popular soda drinks, their market share, and why people like them?`,
         `Give me ideas for outdoor furniture and why I might like it`,
         `What are the five most popular Pokemon cards being used in tournaments and why?`,
         `What are the lightest laptops on the market? State their weight too.`,
-        `I'm hosting dinner for friends in a week. What can I do to impress them?`,
         `Recommend ideas on how to decorate my through lounge. I'm somewhat of a minimalist.`,
         `Tell me the top five PS4 games I should play and why`,
-        `What are the rarest Magic The Gathering cards and what makes them unique?`,
         `My house flooded due to a burst pipe. What should I do?`,
-        `Was Homer real?`,
     ]
     const idx = getRandomInt(0, queries.length)
     const res = queries[idx]

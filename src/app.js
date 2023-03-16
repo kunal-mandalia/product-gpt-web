@@ -21,7 +21,6 @@ import {
 
 async function handleGoClick() {
     try {
-        // get text input
         const q = getQueryText();
         if (!q) {
             return
@@ -100,10 +99,7 @@ function handleRandomQueryButtonClick() {
 }
 
 function main() {
-    
     console.log('running app.js')
-
-    setQueryValue(getRandomQuery())
 
     const goButton = getGoButton()
     goButton.addEventListener('click', handleGoClick)
