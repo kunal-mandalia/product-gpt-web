@@ -29,9 +29,8 @@ async function handleGoClick() {
         updateApp("query", "Asking OpenAI...")
 
         const baseUrl = getAPIEndpoint()
-        const r = Math.random()
         
-        const tcEndpoint = r > 0.5 ? baseUrl + "textcompletion?q=" + q : "notfound"
+        const tcEndpoint = baseUrl + "textcompletion?q=" + q
         const tcRes = await fetch(tcEndpoint, {
             method: "GET",
         })
