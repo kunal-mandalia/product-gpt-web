@@ -35,7 +35,7 @@ export function getAPIEndpoint() {
     if (isDev()) {
         return "http://localhost:8888/.netlify/functions/product-gpt-api/"
     }
-    return "https://main--product-gpt-api.netlify.app/.netlify/functions/product-gpt-api/"
+    return "https://product-gpt-api.netlify.app/.netlify/functions/product-gpt-api/"
 }
 
 export function setResultValue(nextVal) {
